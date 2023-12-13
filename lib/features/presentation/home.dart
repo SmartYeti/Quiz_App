@@ -1,6 +1,7 @@
 // import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:quiz_app/features/presentation/credential/login.dart';
 import 'package:quiz_app/features/presentation/question/question.dart';
 import 'package:quiz_app/features/presentation/quiz/quiz.dart';
 
@@ -19,24 +20,8 @@ class _SidebarXExampleAppState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    return MaterialApp(
-      title: 'Home',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: primaryColor,
-        canvasColor: canvasColor,
-        scaffoldBackgroundColor: scaffoldBackgroundColor,
-        textTheme: const TextTheme(
-          headlineSmall: TextStyle(
-            color: Colors.white,
-            fontSize: 46,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
-      home: Builder(
-        
+    return Scaffold(
+      body: Builder(
         builder: (context) {
           final isSmallScreen = MediaQuery.of(context).size.width < 600;
 
@@ -45,28 +30,28 @@ class _SidebarXExampleAppState extends State<HomePage> {
             key: _key,
 
             appBar: isSmallScreen
-            ? AppBar(
-              centerTitle: true,
-              backgroundColor: canvasColor,
-              title: const Text('Quiz App', 
-              style: TextStyle(
-                color: Colors.white
-              ),),
-              leading: IconButton(
-                onPressed: () {
-                  // if (!Platform.isAndroid && !Platform.isIOS) {
-                  //   _controller.setExtended(true);
-                  // }
-                  _key.currentState?.openDrawer();
-                },
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.white70,
-                ),
-              ),
-            )
-            : null,
-    
+                ? AppBar(
+                    centerTitle: true,
+                    backgroundColor: canvasColor,
+                    title: const Text(
+                      'Quiz App',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    leading: IconButton(
+                      onPressed: () {
+                        // if (!Platform.isAndroid && !Platform.isIOS) {
+                        //   _controller.setExtended(true);
+                        // }
+                        _key.currentState?.openDrawer();
+                      },
+                      icon: const Icon(
+                        Icons.menu,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  )
+                : null,
+
             drawer: SidebarX(
               controller: _controller,
               theme: SidebarXTheme(
@@ -76,12 +61,10 @@ class _SidebarXExampleAppState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 hoverColor: scaffoldBackgroundColor,
-                textStyle:
-                    TextStyle(color: Colors.white.withOpacity(0.7)),
+                textStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
                 selectedTextStyle: const TextStyle(color: Colors.white),
                 itemTextPadding: const EdgeInsets.only(left: 20),
-                selectedItemTextPadding:
-                    const EdgeInsets.only(left: 20),
+                selectedItemTextPadding: const EdgeInsets.only(left: 20),
                 itemDecoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: canvasColor),
@@ -161,21 +144,21 @@ class _SidebarXExampleAppState extends State<HomePage> {
                   icon: Icons.power_settings_new_rounded,
                   label: 'Logout',
                   onTap: () {
+                    // Navigator.pop(context);
                     // debugPrint('Logout');
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => const LoginPage()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()));
                   },
                 )
               ],
             ),
             // ExampleSidebarX(controller: _controller)
-    
+
             body: Row(
-             
               children: [
-             if (!isSmallScreen)
+                if (!isSmallScreen)
                   SidebarX(
                     controller: _controller,
                     theme: SidebarXTheme(
@@ -187,11 +170,9 @@ class _SidebarXExampleAppState extends State<HomePage> {
                       hoverColor: scaffoldBackgroundColor,
                       textStyle:
                           TextStyle(color: Colors.white.withOpacity(0.7)),
-                      selectedTextStyle:
-                          const TextStyle(color: Colors.white),
+                      selectedTextStyle: const TextStyle(color: Colors.white),
                       itemTextPadding: const EdgeInsets.only(left: 30),
-                      selectedItemTextPadding:
-                          const EdgeInsets.only(left: 30),
+                      selectedItemTextPadding: const EdgeInsets.only(left: 30),
                       itemDecoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: canvasColor),
@@ -271,11 +252,12 @@ class _SidebarXExampleAppState extends State<HomePage> {
                         icon: Icons.power_settings_new_rounded,
                         label: 'Logout',
                         onTap: () {
+                          // Navigator.pop(context);
                           // debugPrint('Logout');
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => const LoginPage()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginPage()));
                         },
                       )
                     ],
@@ -284,14 +266,9 @@ class _SidebarXExampleAppState extends State<HomePage> {
                 ,
                 Expanded(
                   child: Center(
-                    child:
-            
-                    _ScreensExample(
-                      controller: _controller
-                      ,
-                    )
-            
-                    ,
+                    child: _ScreensExample(
+                      controller: _controller,
+                    ),
                   ),
                 ),
               ],
@@ -325,13 +302,12 @@ class _ScreensExampleState extends State<_ScreensExample> {
         switch (widget.controller.selectedIndex) {
           case 0:
             return const QuestPage();
-            // return const Text('Questions');
+          // return const Text('Questions');
           case 1:
-          return const QuizPage();
+            return const QuizPage();
           // return const AddShopPage();
-            // return const Text('Quiz');
+          // return const Text('Quiz');
 
-          case 2:
           default:
             return Text(
               pageTitle,
