@@ -1,6 +1,12 @@
 // import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quiz_app/core/dependency_injection/di_container.dart';
+import 'package:quiz_app/core/enum/state_status.enum.dart';
+import 'package:quiz_app/core/global_widgets/snackbar.widget.dart';
+import 'package:quiz_app/features/domain/bloc/auth/auth_bloc.dart';
+import 'package:quiz_app/features/domain/model/auth_user.model.dart';
 import 'package:quiz_app/features/presentation/credential/login.dart';
 import 'package:quiz_app/features/presentation/question/question.dart';
 import 'package:quiz_app/features/presentation/quiz/quiz.dart';
@@ -8,7 +14,8 @@ import 'package:quiz_app/features/presentation/quiz/quiz.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.authUserModel});
+  final AuthUserModel authUserModel;
 
   @override
   State<HomePage> createState() => _SidebarXExampleAppState();
@@ -17,149 +24,62 @@ class HomePage extends StatefulWidget {
 class _SidebarXExampleAppState extends State<HomePage> {
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
   final _key = GlobalKey<ScaffoldState>();
+  final DIContainer diContainer = DIContainer();
+  late AuthBloc _authBloc;
+  late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _authBloc = BlocProvider.of<AuthBloc>(context);
+    userId = widget.authUserModel.userId;
+    _authBloc.add(AuthAutoLoginEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Builder(
-        builder: (context) {
-          final isSmallScreen = MediaQuery.of(context).size.width < 600;
-
+    return BlocConsumer<AuthBloc, AuthState>(
+        bloc: _authBloc,
+        listener: _authListener,
+        builder: (context, state) {
+          if (state.stateStatus == StateStatus.loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           return Scaffold(
-            resizeToAvoidBottomInset: false,
-            key: _key,
+            body: Builder(
+              builder: (context) {
+                final isSmallScreen = MediaQuery.of(context).size.width < 600;
 
-            appBar: isSmallScreen
-                ? AppBar(
-                    centerTitle: true,
-                    backgroundColor: canvasColor,
-                    title: const Text(
-                      'Quiz App',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    leading: IconButton(
-                      onPressed: () {
-                        // if (!Platform.isAndroid && !Platform.isIOS) {
-                        //   _controller.setExtended(true);
-                        // }
-                        _key.currentState?.openDrawer();
-                      },
-                      icon: const Icon(
-                        Icons.menu,
-                        color: Colors.white70,
-                      ),
-                    ),
-                  )
-                : null,
+                return Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  key: _key,
 
-            drawer: SidebarX(
-              controller: _controller,
-              theme: SidebarXTheme(
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: canvasColor,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                hoverColor: scaffoldBackgroundColor,
-                textStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-                selectedTextStyle: const TextStyle(color: Colors.white),
-                itemTextPadding: const EdgeInsets.only(left: 20),
-                selectedItemTextPadding: const EdgeInsets.only(left: 20),
-                itemDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: canvasColor),
-                ),
-                selectedItemDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: actionColor.withOpacity(0.37),
-                  ),
-                  gradient: const LinearGradient(
-                    colors: [accentCanvasColor, canvasColor],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.28),
-                      blurRadius: 30,
-                    )
-                  ],
-                ),
-                iconTheme: IconThemeData(
-                  color: Colors.white.withOpacity(0.7),
-                  size: 20,
-                ),
-                selectedIconTheme: const IconThemeData(
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-              extendedTheme: const SidebarXTheme(
-                width: 150,
-                decoration: BoxDecoration(
-                  color: canvasColor,
-                ),
-              ),
-              // footerDivider: divider,
-              headerBuilder: (context, extended) {
-                return const SizedBox(
-                  height: 100,
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Icon(
-                      Icons.person,
-                      color: white,
-                    )
-                    // Text('Image', selectionColor: Colors.white,)
-                    // Image.asset('assets/images/avatar.png')
-                    ,
-                  ),
-                );
-              },
-              items: [
-                SidebarXItem(
-                  icon: Icons.add_comment_rounded,
-                  label: 'Questions',
-                  onTap: () {
-                    // debugPrint('Home');
-                  },
-                ),
-                // SidebarXItem(
-                //   icon: Icons.search,
-                //   label: 'Search',
-                //   onTap: () {
-                //     // debugPrint('Search');
-                //   },
-                // ),
-                const SidebarXItem(
-                  icon: Icons.quiz_rounded,
-                  label: 'Quiz',
-                ),
-                // const SidebarXItem(
-                //   icon: Icons.favorite,
-                //   label: 'Favorites',
-                // ),
-              ],
-              footerItems: [
-                SidebarXItem(
-                  icon: Icons.power_settings_new_rounded,
-                  label: 'Logout',
-                  onTap: () {
-                    // Navigator.pop(context);
-                    // debugPrint('Logout');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()));
-                  },
-                )
-              ],
-            ),
-            // ExampleSidebarX(controller: _controller)
+                  appBar: isSmallScreen
+                      ? AppBar(
+                          centerTitle: true,
+                          backgroundColor: canvasColor,
+                          title: const Text(
+                            'Quiz App',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          leading: IconButton(
+                            onPressed: () {
+                              // if (!Platform.isAndroid && !Platform.isIOS) {
+                              //   _controller.setExtended(true);
+                              // }
+                              _key.currentState?.openDrawer();
+                            },
+                            icon: const Icon(
+                              Icons.menu,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        )
+                      : null,
 
-            body: Row(
-              children: [
-                if (!isSmallScreen)
-                  SidebarX(
+                  drawer: SidebarX(
                     controller: _controller,
                     theme: SidebarXTheme(
                       margin: const EdgeInsets.all(10),
@@ -171,8 +91,8 @@ class _SidebarXExampleAppState extends State<HomePage> {
                       textStyle:
                           TextStyle(color: Colors.white.withOpacity(0.7)),
                       selectedTextStyle: const TextStyle(color: Colors.white),
-                      itemTextPadding: const EdgeInsets.only(left: 30),
-                      selectedItemTextPadding: const EdgeInsets.only(left: 30),
+                      itemTextPadding: const EdgeInsets.only(left: 20),
+                      selectedItemTextPadding: const EdgeInsets.only(left: 20),
                       itemDecoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: canvasColor),
@@ -202,7 +122,7 @@ class _SidebarXExampleAppState extends State<HomePage> {
                       ),
                     ),
                     extendedTheme: const SidebarXTheme(
-                      width: 200,
+                      width: 150,
                       decoration: BoxDecoration(
                         color: canvasColor,
                       ),
@@ -261,23 +181,156 @@ class _SidebarXExampleAppState extends State<HomePage> {
                         },
                       )
                     ],
-                  )
-                // ExampleSidebarX(controller: _controller)
-                ,
-                Expanded(
-                  child: Center(
-                    child: _ScreensExample(
-                      controller: _controller,
-                    ),
                   ),
-                ),
-              ],
+                  // ExampleSidebarX(controller: _controller)
+
+                  body: Row(
+                    children: [
+                      if (!isSmallScreen)
+                        SidebarX(
+                          controller: _controller,
+                          theme: SidebarXTheme(
+                            margin: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: canvasColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            hoverColor: scaffoldBackgroundColor,
+                            textStyle:
+                                TextStyle(color: Colors.white.withOpacity(0.7)),
+                            selectedTextStyle:
+                                const TextStyle(color: Colors.white),
+                            itemTextPadding: const EdgeInsets.only(left: 30),
+                            selectedItemTextPadding:
+                                const EdgeInsets.only(left: 30),
+                            itemDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: canvasColor),
+                            ),
+                            selectedItemDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: actionColor.withOpacity(0.37),
+                              ),
+                              gradient: const LinearGradient(
+                                colors: [accentCanvasColor, canvasColor],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.28),
+                                  blurRadius: 30,
+                                )
+                              ],
+                            ),
+                            iconTheme: IconThemeData(
+                              color: Colors.white.withOpacity(0.7),
+                              size: 20,
+                            ),
+                            selectedIconTheme: const IconThemeData(
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                          extendedTheme: const SidebarXTheme(
+                            width: 200,
+                            decoration: BoxDecoration(
+                              color: canvasColor,
+                            ),
+                          ),
+                          // footerDivider: divider,
+                          headerBuilder: (context, extended) {
+                            return const SizedBox(
+                              height: 100,
+                              child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Icon(
+                                  Icons.person,
+                                  color: white,
+                                )
+                                // Text('Image', selectionColor: Colors.white,)
+                                // Image.asset('assets/images/avatar.png')
+                                ,
+                              ),
+                            );
+                          },
+                          items: [
+                            SidebarXItem(
+                              icon: Icons.add_comment_rounded,
+                              label: 'Questions',
+                              onTap: () {
+                                // debugPrint('Home');
+                              },
+                            ),
+                            // SidebarXItem(
+                            //   icon: Icons.search,
+                            //   label: 'Search',
+                            //   onTap: () {
+                            //     // debugPrint('Search');
+                            //   },
+                            // ),
+                            const SidebarXItem(
+                              icon: Icons.quiz_rounded,
+                              label: 'Quiz',
+                            ),
+                            // const SidebarXItem(
+                            //   icon: Icons.favorite,
+                            //   label: 'Favorites',
+                            // ),
+                          ],
+                          footerItems: [
+                            SidebarXItem(
+                              icon: Icons.power_settings_new_rounded,
+                              label: 'Logout',
+                              onTap: () {
+                                // Navigator.pop(context);
+                                // debugPrint('Logout');
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginPage()));
+                              },
+                            )
+                          ],
+                        )
+                      // ExampleSidebarX(controller: _controller)
+                      ,
+                      Expanded(
+                        child: Center(
+                          child: _ScreensExample(
+                            controller: _controller,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           );
-        },
-      ),
-    );
+        });
+
   }
+  void _authListener(BuildContext context, AuthState state) {
+    if (state.stateStatus == StateStatus.error) {
+      SnackBarUtils.defualtSnackBar(state.errorMessage, context);
+      return;
+    }
+
+    if (state.stateStatus == StateStatus.initial) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => MultiBlocProvider(providers: [
+              BlocProvider<AuthBloc>(
+                  create: (BuildContext context) => diContainer.authBloc),
+            
+            ], child: const LoginPage()),
+          ),
+          ModalRoute.withName('/'));
+    }
+  }
+
 }
 
 class _ScreensExample extends StatefulWidget {
@@ -317,6 +370,7 @@ class _ScreensExampleState extends State<_ScreensExample> {
       },
     );
   }
+
 }
 
 String _getTitleByIndex(int index) {
