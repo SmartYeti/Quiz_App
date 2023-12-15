@@ -1,10 +1,13 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:quiz_app/config.dart';
-import 'package:quiz_app/features/data/datasource/auth_local.datasource.dart';
-import 'package:quiz_app/features/data/datasource/auth_remote.datasource.dart';
+import 'package:quiz_app/features/data/datasource/auth/auth_local.datasource.dart';
+import 'package:quiz_app/features/data/datasource/auth/auth_remote.datasource.dart';
+import 'package:quiz_app/features/data/datasource/quest/quest_remote.datasource.dart';
 import 'package:quiz_app/features/data/repository/auth_repository.dart';
+import 'package:quiz_app/features/data/repository/quest_repository.dart';
 import 'package:quiz_app/features/domain/bloc/auth/auth_bloc.dart';
+import 'package:quiz_app/features/domain/bloc/quest/quest_bloc.dart';
 
 class DIContainer {
   Client get _client => Client()
@@ -28,4 +31,14 @@ class DIContainer {
       AuthRepository(_authRemoteDatasource, _authLocalDatasource);
 
   AuthBloc get authBloc => AuthBloc(_authRepository);
+
+
+
+  QuestRemoteDatasource get _questRemoteDatasource =>
+      QuestRemoteDatasource(_databases);
+
+  QuestRepository get _questRepository =>
+      QuestRepository(_questRemoteDatasource);
+      
+  QuestBloc get questBloc => QuestBloc(_questRepository);
 }

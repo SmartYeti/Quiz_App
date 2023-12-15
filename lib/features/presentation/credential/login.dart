@@ -5,7 +5,8 @@ import 'package:quiz_app/core/enum/state_status.enum.dart';
 import 'package:quiz_app/core/global_widgets/snackbar.widget.dart';
 import 'package:quiz_app/core/utils/guard.dart';
 import 'package:quiz_app/features/domain/bloc/auth/auth_bloc.dart';
-import 'package:quiz_app/features/domain/model/login_model.dart';
+import 'package:quiz_app/features/domain/bloc/quest/quest_bloc.dart';
+import 'package:quiz_app/features/domain/model/auth/login_model.dart';
 import 'package:quiz_app/features/presentation/credential/register.dart';
 import 'package:quiz_app/features/presentation/home.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -261,6 +262,10 @@ class _LoginPageState extends State<LoginPage> {
                         BlocProvider<AuthBloc>(
                           create: (BuildContext context) =>
                               diContainer.authBloc,
+                        ),
+                        BlocProvider<QuestBloc>(
+                          create: (BuildContext context) =>
+                              diContainer.questBloc,
                         ),
                       ],
                       child: HomePage(

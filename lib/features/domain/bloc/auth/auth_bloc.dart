@@ -3,8 +3,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/core/enum/state_status.enum.dart';
 import 'package:quiz_app/features/data/repository/auth_repository.dart';
-import 'package:quiz_app/features/domain/model/auth_user.model.dart';
-import 'package:quiz_app/features/domain/model/login_model.dart';
+import 'package:quiz_app/features/domain/model/auth/auth_user.model.dart';
+import 'package:quiz_app/features/domain/model/auth/login_model.dart';
 import 'package:quiz_app/features/domain/model/register_model.dart';
 
 part 'auth_event.dart';

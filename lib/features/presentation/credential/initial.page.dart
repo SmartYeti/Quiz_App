@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quiz_app/core/dependency_injection/di_container.dart';
 import 'package:quiz_app/core/enum/state_status.enum.dart';
 import 'package:quiz_app/features/domain/bloc/auth/auth_bloc.dart';
+import 'package:quiz_app/features/domain/bloc/quest/quest_bloc.dart';
 import 'package:quiz_app/features/presentation/credential/login.dart';
 import 'package:quiz_app/features/presentation/home.dart';
 
@@ -64,9 +65,12 @@ class _InitialPageState extends State<InitialPage> {
           builder: (context) => MultiBlocProvider(providers: [
             BlocProvider<AuthBloc>(
                 create: (BuildContext context) => diContainer.authBloc),
+             BlocProvider<QuestBloc>(
+                create: (BuildContext context) => diContainer.questBloc),
            
           ], child: HomePage(
             authUserModel: state.authUserModel!,
+            
           )),
         ),
       );

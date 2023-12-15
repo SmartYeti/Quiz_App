@@ -1,9 +1,9 @@
 import 'package:appwrite/models.dart';
 import 'package:dartz/dartz.dart';
-import 'package:quiz_app/features/data/datasource/auth_local.datasource.dart';
-import 'package:quiz_app/features/data/datasource/auth_remote.datasource.dart';
-import 'package:quiz_app/features/domain/model/auth_user.model.dart';
-import 'package:quiz_app/features/domain/model/login_model.dart';
+import 'package:quiz_app/features/data/datasource/auth/auth_local.datasource.dart';
+import 'package:quiz_app/features/data/datasource/auth/auth_remote.datasource.dart';
+import 'package:quiz_app/features/domain/model/auth/auth_user.model.dart';
+import 'package:quiz_app/features/domain/model/auth/login_model.dart';
 import 'package:quiz_app/features/domain/model/register_model.dart';
 
 class AuthRepository {
@@ -26,10 +26,12 @@ class AuthRepository {
 
       final AuthUserModel authUserModel =
           await _remoteDatasource.getAuthUser(session.userId);
-
+      // print(session);
       return Right(authUserModel);
     } catch (e) {
-      return left(e.toString());
+      
+      // print(e);
+      return Left(e.toString());
     }
   }
 
@@ -46,10 +48,11 @@ class AuthRepository {
       await _remoteDatasource.saveAccount(session.userId, registerModel);
 
       final AuthUserModel authUserModel =
-          await _remoteDatasource.getAuthUser(session.$id);
-
+          await _remoteDatasource.getAuthUser(session.userId);
+      // print(session);
       return Right(authUserModel);
     } catch (e) {
+      // print(e);
       return Left(e.toString());
     }
   }

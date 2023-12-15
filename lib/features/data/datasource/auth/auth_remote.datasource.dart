@@ -2,8 +2,8 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:dartz/dartz.dart';
 import 'package:quiz_app/config.dart';
-import 'package:quiz_app/features/domain/model/auth_user.model.dart';
-import 'package:quiz_app/features/domain/model/login_model.dart';
+import 'package:quiz_app/features/domain/model/auth/auth_user.model.dart';
+import 'package:quiz_app/features/domain/model/auth/login_model.dart';
 import 'package:quiz_app/features/domain/model/register_model.dart';
 
 class AuthRemoteDatasource {

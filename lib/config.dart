@@ -1,9 +1,12 @@
 class Config {
   static const String endpoint = 'https://cloud.appwrite.io/v1';
-  static const String projectId = '65795fe1b4cf590283df';
+  static const String projectId = '657ba2e0729fabe0d52c';
 
-  static const String userdbId = '657960ee82cd50d5e400';
-  static const String userDetailsId = '6579611f7441225b3bff';
+  static const String userdbId = '657ba34c2a56d4abec5b';
+  static const String userDetailsId = '657ba35921099db833aa';
+
+  static const String questDetailsId = '657bad208d95242bb169';
+
 
   // for Task Collection
   // static const String todoTitleID = '655ab385e3475f75ff98';
