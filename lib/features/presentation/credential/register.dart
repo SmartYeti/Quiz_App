@@ -96,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: Column(
                               children: <Widget>[
                                 Container(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(5),
                                   decoration: const BoxDecoration(
                                       border: Border(
                                           bottom:

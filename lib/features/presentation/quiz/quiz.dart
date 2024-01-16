@@ -23,6 +23,9 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   final DIContainer diContainer = DIContainer();
   bool isChecked = false;
+  bool isChecked1 = false;
+  bool isChecked2 = false;
+  bool isChecked3 = false;
   late int page;
   // late AuthBloc _authBloc;
   late QuestBloc _questBloc;
@@ -175,6 +178,12 @@ class _QuizPageState extends State<QuizPage> {
                                                             setState(() {
                                                               isChecked =
                                                                   value!;
+                                                              isChecked1 =
+                                                                  false;
+                                                              isChecked2 =
+                                                                  false;
+                                                              isChecked3 =
+                                                                  false;
                                                             });
                                                           },
                                                         ),
@@ -199,12 +208,18 @@ class _QuizPageState extends State<QuizPage> {
                                                         Checkbox(
                                                           activeColor:
                                                               checkColor,
-                                                          value: isChecked,
+                                                          value: isChecked1,
                                                           onChanged:
                                                               (bool? value) {
                                                             setState(() {
-                                                              isChecked =
+                                                              isChecked1 =
                                                                   value!;
+                                                              isChecked =
+                                                                  false;
+                                                              isChecked2 =
+                                                                  false;
+                                                              isChecked3 =
+                                                                  false;
                                                             });
                                                           },
                                                         ),
@@ -229,12 +244,18 @@ class _QuizPageState extends State<QuizPage> {
                                                         Checkbox(
                                                           activeColor:
                                                               checkColor,
-                                                          value: isChecked,
+                                                          value: isChecked2,
                                                           onChanged:
                                                               (bool? value) {
                                                             setState(() {
-                                                              isChecked =
+                                                              isChecked2 =
                                                                   value!;
+                                                              isChecked1 =
+                                                                  false;
+                                                              isChecked =
+                                                                  false;
+                                                              isChecked3 =
+                                                                  false;
                                                             });
                                                           },
                                                         ),
@@ -259,12 +280,18 @@ class _QuizPageState extends State<QuizPage> {
                                                         Checkbox(
                                                           activeColor:
                                                               checkColor,
-                                                          value: isChecked,
+                                                          value: isChecked3,
                                                           onChanged:
                                                               (bool? value) {
                                                             setState(() {
-                                                              isChecked =
+                                                              isChecked3 =
                                                                   value!;
+                                                              isChecked1 =
+                                                                  false;
+                                                              isChecked2 =
+                                                                  false;
+                                                              isChecked =
+                                                                  false;
                                                             });
                                                           },
                                                         ),
